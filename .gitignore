@@ -2,14 +2,29 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.venv/
 venv/
 .env
 
-# Project specific
+# Project output
 output/
 output_page/
+
+# Node.js (SVG Importer)
+tools/svg_importer/node_modules/
+tools/svg_importer/package-lock.json
+
+# Imported assets (generated)
+assets/*.png
+assets/*.h
+
+# Generated files
 examples/assets/wifi_icon.png
 generate_wifi_icon.py
 
 # System
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

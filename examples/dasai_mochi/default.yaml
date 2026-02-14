@@ -1,0 +1,68 @@
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 40
+
+elements:
+  # Olho Esquerdo
+  - type: rect
+    id: eye_l
+    props:
+      x: 35
+      y: 20
+      w: 20
+      h: 24
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 24
+        y: 20
+      - frame: 18
+        h: 24
+        y: 20
+      - frame: 20
+        h: 2  # Pisca (fecha)
+        y: 31
+      - frame: 22
+        h: 24 # Abre
+        y: 20
+
+  # Olho Direito
+  - type: rect
+    id: eye_r
+    props:
+      x: 73
+      y: 20
+      w: 20
+      h: 24
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 24
+        y: 20
+      - frame: 18
+        h: 24
+        y: 20
+      - frame: 20
+        h: 2  # Pisca (fecha)
+        y: 31
+      - frame: 22
+        h: 24 # Abre
+        y: 20
+
+  # Boca pequena (opcional, igual ao original)
+  - type: line
+    id: mouth
+    props:
+      x1: 60
+      y1: 45
+      x2: 68
+      y2: 45
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true

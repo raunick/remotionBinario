@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual remotionBinario</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            font-weight: 300;
+        }
+
+        h2 {
+            margin-top: 3rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--secondary);
+        }
+
+        h3 {
+            margin-top: 2rem;
+            color: var(--text);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
+            color: #bd1e59;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .alert {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25em 0.4em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            background-color: var(--secondary);
+            color: white;
+            margin-right: 0.5rem;
+        }
+        
+        .badge.req { background-color: #dc2626; }
+        .badge.opt { background-color: #16a34a; }
+
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>remotionBinario</h1>
+        <div class="subtitle">Manual de Uso e Referência Técnica v1.0</div>
+        <p>Engine de animação OLED de alta performance para microcontroladores.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#introducao">Introdução</a></li>
+            <li><a href="#instalacao">Instalação</a></li>
+            <li><a href="#cli">Interface de Linha de Comando (CLI)</a></li>
+            <li><a href="#dsl">Referência da DSL (YAML)</a></li>
+            <li><a href="#integracao">Integração com Arduino/ESP32</a></li>
+        </ul>
+    </nav>
+
+    <section id="introducao">
+        <h2>🚀 Introdução</h2>
+        <p>
+            O <strong>remotionBinario</strong> é uma ferramenta profissional para criar animações fluidas e otimizadas para displays monocromáticos (OLED/LCD) em sistemas embarcados. 
+            Ele permite descrever animações usando um arquivo YAML simples, visualizá-las no navegador ou terminal, e exportá-las como arrays C (PROGMEM) altamente otimizados.
+        </p>
+        <div class="alert">
+            <strong>Destaque:</strong> Inclui compressão Delta, economizando até 90% de memória flash ao armazenar apenas as diferenças entre quadros.
+        </div>
+    </section>
+
+    <section id="instalacao">
+        <h2>🛠️ Instalação</h2>
+        <p>Requer Python 3.9 ou superior.</p>
+        <pre><code># Clone o repositório
+git clone https://github.com/seu-usuario/remotionBinario.git
+cd remotionBinario
+
+# Instale as dependências
+pip install -r requirements.txt</code></pre>
+    </section>
+
+    <section id="basics">
+        <h2>🏁 Uso Básico</h2>
+        <p>Para gerar uma animação a partir de um arquivo de exemplo:</p>
+        <pre><code>python main.py examples/bouncing_ball.yaml</code></pre>
+        <p>Isso irá gerar:</p>
+        <ul>
+            <li><code>output/animation.h</code> (Código C)</li>
+            <li><code>output/preview.gif</code> (Visualização)</li>
+        </ul>
+    </section>
+
+    <section id="cli">
+        <h2>💻 Interface de Linha de Comando (CLI)</h2>
+        <p>O script <code>main.py</code> aceita diversos argumentos para controlar a exportação e visualização.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Argumento</th>
+                    <th>Descrição</th>
+                    <th>Exemplo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>scene</code></td>
+                    <td>Caminho para o arquivo YAML da cena (Obrigatório).</td>
+                    <td><code>minha_cena.yaml</code></td>
+                </tr>
+                <tr>
+                    <td><code>--output-dir, -o</code></td>
+                    <td>Diretório de saída (Padrão: <code>output</code>).</td>
+                    <td><code>-o build/assets</code></td>
+                </tr>
+                <tr>
+                    <td><code>--format, -f</code></td>
+                    <td>Formato dos bytes: <code>horizontal</code>, <code>vertical</code>, <code>page</code>.</td>
+                    <td><code>-f page</code> (para U8g2)</td>
+                </tr>
+                <tr>
+                    <td><code>--delta</code></td>
+                    <td>Ativa a compressão delta (gera <code>animation_delta.h</code>).</td>
+                    <td><code>--delta</code></td>
+                </tr>
+                <tr>
+                    <td><code>--serve</code></td>
+                    <td>Inicia um servidor web para preview interativo.</td>
+                    <td><code>--serve --port 8080</code></td>
+                </tr>
+                <tr>
+                    <td><code>--scale</code></td>
+                    <td>Fator de escala para o GIF e Web Preview (Padrão: 4).</td>
+                    <td><code>--scale 6</code></td>
+                </tr>
+                <tr>
+                    <td><code>--dithering</code></td>
+                    <td>Força dithering em todos os sprites.</td>
+                    <td><code>--dithering</code></td>
+                </tr>
+                <tr>
+                    <td><code>--no-gif</code></td>
+                    <td>Não gera o arquivo GIF.</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><code>--no-ascii</code></td>
+                    <td>Não exibe o preview ASCII no terminal.</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="dsl">
+        <h2>📜 Referência da DSL (YAML)</h2>
+        <p>As animações são definidas em arquivos YAML divididos em três seções principais: <code>screen</code>, <code>elements</code> e <code>output</code>.</p>
+
+        <h3>1. Configuração da Tela (screen)</h3>
+        <pre><code>screen:
+  width: 128    # Largura em pixels (múltiplo de 8)
+  height: 64    # Altura em pixels (múltiplo de 8)
+  fps: 15       # Quadros por segundo
+  frames: 40    # Duração total em quadros</code></pre>
+
+        <h3>2. Elementos (elements)</h3>
+        <p>Lista de objetos gráficos. Cada elemento possui propriedades comuns e específicas.</p>
+
+        <h4>Tipos de Elementos e Propriedades</h4>
+        
+        <p><strong>Círculo (circle)</strong></p>
+        <table>
+            <tr><th>Propriedade</th><th>Descrição</th></tr>
+            <tr><td><code>cx</code>, <code>cy</code></td><td>Centro X e Y (Animável)</td></tr>
+            <tr><td><code>r</code></td><td>Raio (Animável)</td></tr>
+            <tr><td><code>fill</code></td><td>Preenchido (<code>true</code>) ou contorno (<code>false</code>)</td></tr>
+        </table>
+
+        <p><strong>Retângulo (rect)</strong></p>
+        <table>
+            <tr><th>Propriedade</th><th>Descrição</th></tr>
+            <tr><td><code>x</code>, <code>y</code></td><td>Posição superior esquerda (Animável)</td></tr>
+            <tr><td><code>w</code>, <code>h</code></td><td>Largura e Altura (Animável)</td></tr>
+            <tr><td><code>fill</code></td><td>Preenchido ou contorno</td></tr>
+        </table>
+
+        <p><strong>Linha (line)</strong></p>
+        <table>
+            <tr><th>Propriedade</th><th>Descrição</th></tr>
+            <tr><td><code>x1</code>, <code>y1</code></td><td>Ponto inicial (Animável)</td></tr>
+            <tr><td><code>x2</code>, <code>y2</code></td><td>Ponto final (Animável)</td></tr>
+        </table>
+
+        <p><strong>Texto (text)</strong></p>
+        <table>
+            <tr><th>Propriedade</th><th>Descrição</th></tr>
+            <tr><td><code>x</code>, <code>y</code></td><td>Posição (Animável)</td></tr>
+            <tr><td><code>text</code></td><td>Conteúdo do texto</td></tr>
+            <tr><td><code>font_size</code></td><td>Tamanho da fonte (Animável)</td></tr>
+            <tr><td><code>font_path</code></td><td>Caminho para arquivo .ttf (opcional)</td></tr>
+        </table>
+
+        <p><strong>Sprite (sprite)</strong></p>
+        <table>
+            <tr><th>Propriedade</th><th>Descrição</th></tr>
+            <tr><td><code>x</code>, <code>y</code></td><td>Posição (Animável)</td></tr>
+            <tr><td><code>src</code></td><td>Caminho para imagem (PNG/JPG)</td></tr>
+            <tr><td><code>dithering</code></td><td>Aplique dithering (<code>true</code>/<code>false</code>)</td></tr>
+        </table>
+
+        <h3>3. Animação e Keyframes</h3>
+        <p>Todo elemento pode ter uma lista de <code>keyframes</code> para animar suas propriedades ao longo do tempo.</p>
+        <pre><code>keyframes:
+  - frame: 0
+    cx: 10
+    easing: "ease-in"  # Curva de aceleração
+  - frame: 20
+    cx: 100
+    easing: "bounce"   # Efeito de pulo</code></pre>
+
+        <h4>Funções de Easing Disponíveis</h4>
+        <ul>
+            <li><code>linear</code> (Padrão)</li>
+            <li><code>ease-in</code>, <code>ease-out</code>, <code>ease-in-out</code></li>
+            <li><code>cubic-in</code>, <code>cubic-out</code>, <code>cubic-in-out</code></li>
+            <li><code>elastic</code>, <code>bounce</code></li>
+        </ul>
+    </section>
+
+    <section id="integracao">
+        <h2>🔌 Integração com Arduino/ESP32</h2>
+        <ol>
+            <li>Gere o código com compressão delta (recomendado):
+                <pre><code>python main.py cena.yaml --delta</code></pre>
+            </li>
+            <li>Copie o arquivo gerado (<code>output/animation_delta.h</code>) para a pasta do seu sketch Arduino.</li>
+            <li>Inclua o arquivo no seu código e use a lógica de renderização. Exemplo para Adafruit GFX:</li>
+        </ol>
+
+        <pre><code>#include &lt;Wire.h&gt;
+#include &lt;Adafruit_GFX.h&gt;
+#include &lt;Adafruit_SSD1306.h&gt;
+#include "animation_delta.h"
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+void setup() {
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+}
+
+void loop() {
+  // Exemplo simples frame a frame (sem delta)
+  for(int i=0; i < FRAME_COUNT; i++) {
+    display.clearDisplay();
+    display.drawBitmap(0, 0, frames[i], WIDTH, HEIGHT, 1);
+    display.display();
+    delay(1000 / FPS);
+  }
+}</code></pre>
+
+        <div class="alert">
+            <strong>Nota:</strong> Para usar a compressão <strong>Delta</strong>, você precisará implementar um decodificador simples que lê apenas os pixels alterados. O arquivo gerado contém as instruções de diferença.
+        </div>
+    </section>
+
+    <footer>
+        <p>Gerado automaticamente por Antigravity para remotionBinario. &copy; 2026.</p>
+    </footer>
+</div>
+
+</body>
+</html>

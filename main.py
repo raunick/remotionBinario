@@ -36,7 +36,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=BANNER,
     )
-    parser.add_argument("scene", help="Path to YAML scene file")
+    parser.add_argument("scene", nargs="?", default=None, help="Path to YAML scene file")
     parser.add_argument("--output-dir", "-o", default="output", help="Output directory (default: output)")
     parser.add_argument("--format", "-f", default=None, help="Byte format: horizontal, vertical, page")
     parser.add_argument("--delta", action="store_true", help="Enable delta compression export")
@@ -44,12 +44,22 @@ def main():
     parser.add_argument("--no-ascii", action="store_true", help="Skip ASCII terminal preview")
     parser.add_argument("--scale", type=int, default=4, help="GIF/Web scale factor (default: 4)")
     parser.add_argument("--dithering", action="store_true", help="Force dithering on all sprites")
-    parser.add_argument("--serve", action="store_true", help="Start web preview server")
+    parser.add_argument("--serve", action="store_true", help="Start Studio Dashboard")
     parser.add_argument("--port", type=int, default=5050, help="Web preview port (default: 5050)")
 
     args = parser.parse_args()
 
     print(BANNER)
+
+    # Studio Dashboard (standalone — no scene file needed)
+    if args.serve:
+        from web_preview.server import start_server
+        start_server(port=args.port)
+        return
+
+    # Scene file is required for all other modes
+    if not args.scene:
+        parser.error("A scene YAML file is required (or use --serve for the Studio Dashboard)")
 
     # Parse scene
     print(f"📄 Loading scene: {args.scene}")
@@ -80,13 +90,6 @@ def main():
 
     output_dir = args.output_dir
     os.makedirs(output_dir, exist_ok=True)
-
-    # Web preview (blocks)
-    if args.serve:
-        from web_preview.server import start_server
-        start_server(frames, anim.fps, anim.width, anim.height,
-                     port=args.port, scale=args.scale)
-        return
 
     # C-Array export
     if do_c_array:

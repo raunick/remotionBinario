@@ -1,0 +1,108 @@
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 60
+
+elements:
+  # Cabeça
+  - type: circle
+    id: head
+    props:
+      cx: 64
+      cy: 32
+      r: 25
+      fill: false
+      anti_alias: true
+
+  # Olho Esquerdo (Globo)
+  - type: circle
+    id: eye_l_bg
+    props:
+      cx: 54
+      cy: 28
+      r: 6
+      fill: false
+
+  # Olho Direito (Globo)
+  - type: circle
+    id: eye_r_bg
+    props:
+      cx: 74
+      cy: 28
+      r: 6
+      fill: false
+
+  # Pupila Esquerda (Animada)
+  - type: circle
+    id: pupil_l
+    props:
+      cx: 54
+      cy: 28
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        cx: 54 # Centro
+        easing: "ease-in-out"
+      - frame: 10
+        cx: 50 # Esquerda
+      - frame: 20
+        cx: 50 # Mantém
+      - frame: 30
+        cx: 58 # Direita
+      - frame: 40
+        cx: 58 # Mantém
+      - frame: 50
+        cx: 54 # Centro
+
+  # Pupila Direita (Animada)
+  - type: circle
+    id: pupil_r
+    props:
+      cx: 74
+      cy: 28
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        cx: 74 # Centro
+        easing: "ease-in-out"
+      - frame: 10
+        cx: 70 # Esquerda
+      - frame: 20
+        cx: 70 # Mantém
+      - frame: 30
+        cx: 78 # Direita
+      - frame: 40
+        cx: 78 # Mantém
+      - frame: 50
+        cx: 74 # Centro
+
+  # Boca
+  - type: line
+    id: mouth
+    props:
+      x1: 54
+      y1: 45
+      x2: 74
+      y2: 45
+      anti_alias: true
+    keyframes:
+      - frame: 0
+        y1: 45
+        y2: 45
+        easing: "ease-in-out"
+      - frame: 10
+        y1: 43 # Sorriso leve ao olhar
+        y2: 43
+      - frame: 50
+        y1: 45
+        y2: 45
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: true
+  format: "horizontal"
+  delta_compression: true

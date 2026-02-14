@@ -1,0 +1,82 @@
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 30
+
+elements:
+  # Olho Esquerdo (Vira coração)
+  - type: circle
+    id: heart_l_1
+    props:
+      cx: 40
+      cy: 30
+      r: 8
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 8
+        easing: "elastic"
+      - frame: 15
+        r: 10 # Pulsa
+      - frame: 30
+        r: 8
+
+  - type: circle
+    id: heart_l_2
+    props:
+      cx: 50
+      cy: 30
+      r: 8
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 8
+        easing: "elastic"
+      - frame: 15
+        r: 10
+      - frame: 30
+        r: 8
+
+  # Triângulo inferior do coração esquerdo (usando linhas grossas simuladas ou rect)
+  # Simplificando para círculos pulsantes simulando "apaixonado"
+
+  # Olho Direito
+  - type: circle
+    id: heart_r_1
+    props:
+      cx: 78
+      cy: 30
+      r: 8
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 8
+        easing: "elastic" # Sincronizado
+      - frame: 15
+        r: 10
+      - frame: 30
+        r: 8
+
+  - type: circle
+    id: heart_r_2
+    props:
+      cx: 88
+      cy: 30
+      r: 8
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 8
+        easing: "elastic"
+      - frame: 15
+        r: 10
+      - frame: 30
+        r: 8
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true
