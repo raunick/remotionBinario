@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Project specific
+output/
+output_page/
+examples/assets/wifi_icon.png
+generate_wifi_icon.py
+
+# System
+.DS_Store

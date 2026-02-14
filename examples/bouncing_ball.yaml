@@ -1,0 +1,64 @@
+# Scene: Bouncing Ball
+# A circle bounces horizontally across a 128x64 OLED screen.
+
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 40
+
+elements:
+  # Main bouncing ball
+  - type: circle
+    id: ball
+    props:
+      cx: 10
+      cy: 32
+      r: 6
+      fill: true
+      anti_alias: true
+    keyframes:
+      - frame: 0
+        cx: 10
+        cy: 32
+        easing: "ease-in"
+      - frame: 10
+        cx: 64
+        cy: 16
+        easing: "ease-out"
+      - frame: 20
+        cx: 118
+        cy: 32
+        easing: "ease-in"
+      - frame: 30
+        cx: 64
+        cy: 48
+        easing: "ease-out"
+      - frame: 39
+        cx: 10
+        cy: 32
+
+  # Ground line
+  - type: line
+    id: ground
+    props:
+      x1: 0
+      y1: 58
+      x2: 127
+      y2: 58
+
+  # Title text
+  - type: text
+    id: title
+    props:
+      x: 30
+      y: 0
+      text: "BOUNCE"
+      font_size: 10
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: true
+  format: "horizontal"
+  delta_compression: false

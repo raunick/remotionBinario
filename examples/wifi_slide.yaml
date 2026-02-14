@@ -1,0 +1,99 @@
+# Scene: WiFi Icon Slide
+# A WiFi icon slides from left to right with a "Connecting..." text.
+
+screen:
+  width: 128
+  height: 64
+  fps: 12
+  frames: 36
+
+elements:
+  # WiFi icon sprite (16x16 PNG)
+  - type: sprite
+    id: wifi
+    props:
+      x: 0
+      y: 24
+      src: "assets/wifi_icon.png"
+      dithering: false
+    keyframes:
+      - frame: 0
+        x: -16
+        easing: "ease-out"
+      - frame: 12
+        x: 56
+        easing: "linear"
+      - frame: 24
+        x: 56
+        easing: "ease-in"
+      - frame: 35
+        x: 140
+
+  # "Connecting..." text that fades in
+  - type: text
+    id: label
+    props:
+      x: 20
+      y: 48
+      text: "Connecting..."
+      font_size: 10
+
+  # Decorative top line
+  - type: line
+    id: topline
+    props:
+      x1: 0
+      y1: 0
+      x2: 127
+      y2: 0
+
+  # Decorative bottom line
+  - type: line
+    id: botline
+    props:
+      x1: 0
+      y1: 63
+      x2: 127
+      y2: 63
+
+  # Moving dot indicator
+  - type: circle
+    id: dot1
+    props:
+      cx: 40
+      cy: 10
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        cx: 40
+        easing: "ease-in-out"
+      - frame: 18
+        cx: 90
+        easing: "ease-in-out"
+      - frame: 35
+        cx: 40
+
+  - type: circle
+    id: dot2
+    props:
+      cx: 60
+      cy: 10
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        cx: 60
+        easing: "ease-in-out"
+      - frame: 18
+        cx: 110
+        easing: "ease-in-out"
+      - frame: 35
+        cx: 60
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true
