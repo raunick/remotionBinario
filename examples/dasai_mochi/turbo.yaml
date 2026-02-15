@@ -1,0 +1,192 @@
+# 🏎️ TURBO — Olhos se comprimem e explodem com boost!
+# Inspirado em turbinas, boost gauges e velocidade pura.
+
+screen:
+  width: 128
+  height: 64
+  fps: 20
+  frames: 60
+
+elements:
+  # ═══════════════════════════════════
+  # Olho Esquerdo — Squish horizontal → Elastic snap open
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_l
+    props:
+      x: 30
+      y: 18
+      w: 22
+      h: 28
+      fill: true
+    keyframes:
+      # Fase 1: Repouso
+      - frame: 0
+        x: 30
+        y: 18
+        w: 22
+        h: 28
+      # Fase 2: Compressão (acumulando boost)
+      - frame: 12
+        x: 30
+        y: 18
+        w: 22
+        h: 28
+        easing: "cubic-in"
+      - frame: 20
+        x: 36
+        y: 24
+        w: 10
+        h: 16
+        easing: "elastic-out"
+      # Fase 3: EXPLOSÃO — abre maior que o normal!
+      - frame: 30
+        x: 26
+        y: 14
+        w: 30
+        h: 36
+        easing: "elastic-out"
+      # Fase 4: Volta ao normal com bounce
+      - frame: 45
+        x: 30
+        y: 18
+        w: 22
+        h: 28
+
+  # ═══════════════════════════════════
+  # Olho Direito — Mesmo efeito, 1 frame delay
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_r
+    props:
+      x: 76
+      y: 18
+      w: 22
+      h: 28
+      fill: true
+    keyframes:
+      - frame: 0
+        x: 76
+        y: 18
+        w: 22
+        h: 28
+      - frame: 13
+        x: 76
+        y: 18
+        w: 22
+        h: 28
+        easing: "cubic-in"
+      - frame: 21
+        x: 82
+        y: 24
+        w: 10
+        h: 16
+        easing: "elastic-out"
+      - frame: 31
+        x: 72
+        y: 14
+        w: 30
+        h: 36
+        easing: "elastic-out"
+      - frame: 46
+        x: 76
+        y: 18
+        w: 22
+        h: 28
+
+  # ═══════════════════════════════════
+  # Speed Line 1 (topo)
+  # ═══════════════════════════════════
+  - type: line
+    id: speed1
+    props:
+      x1: 0
+      y1: 8
+      x2: 0
+      y2: 8
+    keyframes:
+      - frame: 20
+        x1: 128
+        x2: 128
+        easing: "cubic-out"
+      - frame: 28
+        x1: 0
+        x2: 40
+
+  # Speed Line 2 (meio-alto)
+  - type: line
+    id: speed2
+    props:
+      x1: 0
+      y1: 4
+      x2: 0
+      y2: 4
+    keyframes:
+      - frame: 22
+        x1: 128
+        x2: 128
+        easing: "cubic-out"
+      - frame: 30
+        x1: 0
+        x2: 55
+
+  # Speed Line 3 (fundo)
+  - type: line
+    id: speed3
+    props:
+      x1: 0
+      y1: 56
+      x2: 0
+      y2: 56
+    keyframes:
+      - frame: 21
+        x1: 128
+        x2: 128
+        easing: "cubic-out"
+      - frame: 29
+        x1: 0
+        x2: 45
+
+  # Speed Line 4 (fundo baixo)
+  - type: line
+    id: speed4
+    props:
+      x1: 0
+      y1: 60
+      x2: 0
+      y2: 60
+    keyframes:
+      - frame: 23
+        x1: 128
+        x2: 128
+        easing: "cubic-out"
+      - frame: 31
+        x1: 0
+        x2: 35
+
+  # ═══════════════════════════════════
+  # Boca — Abre em O de empolgação
+  # ═══════════════════════════════════
+  - type: circle
+    id: mouth
+    props:
+      cx: 64
+      cy: 52
+      r: 0
+      fill: false
+    keyframes:
+      - frame: 18
+        r: 0
+        easing: "elastic-out"
+      - frame: 28
+        r: 6
+        easing: "ease-in-out"
+      - frame: 45
+        r: 0
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true

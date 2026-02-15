@@ -1,0 +1,275 @@
+# 👾 RETRO 70s/80s — Pixel-art arcade vibes, Pac-Man mouth, scanlines
+# Inspirado em arcades, Atari, Pac-Man, estética CRT.
+
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 60
+
+elements:
+  # ═══════════════════════════════════
+  # SCANLINES — linhas horizontais estilo CRT (fixas)
+  # Cria o efeito de tela antiga
+  # ═══════════════════════════════════
+  - type: line
+    id: scan1
+    props:
+      x1: 0
+      y1: 3
+      x2: 128
+      y2: 3
+
+  - type: line
+    id: scan2
+    props:
+      x1: 0
+      y1: 11
+      x2: 128
+      y2: 11
+
+  - type: line
+    id: scan3
+    props:
+      x1: 0
+      y1: 19
+      x2: 128
+      y2: 19
+
+  - type: line
+    id: scan4
+    props:
+      x1: 0
+      y1: 43
+      x2: 128
+      y2: 43
+
+  - type: line
+    id: scan5
+    props:
+      x1: 0
+      y1: 51
+      x2: 128
+      y2: 51
+
+  - type: line
+    id: scan6
+    props:
+      x1: 0
+      y1: 59
+      x2: 128
+      y2: 59
+
+  # ═══════════════════════════════════
+  # Olho Esquerdo — Quadrado pixel-art, pisca em escada
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_l
+    props:
+      x: 30
+      y: 22
+      w: 20
+      h: 20
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 20
+        y: 22
+      # Pisca pixel-art (fecha em steps)
+      - frame: 20
+        h: 20
+        y: 22
+      - frame: 22
+        h: 12
+        y: 26
+      - frame: 24
+        h: 4
+        y: 30
+      - frame: 26
+        h: 12
+        y: 26
+      - frame: 28
+        h: 20
+        y: 22
+
+  # Pupila esquerda (pixel quadrado dentro)
+  - type: rect
+    id: pupil_l
+    props:
+      x: 38
+      y: 28
+      w: 8
+      h: 8
+      fill: false
+    keyframes:
+      - frame: 0
+        x: 38
+        easing: "linear"
+      # Move como 8-bit — em steps discretos
+      - frame: 10
+        x: 34
+      - frame: 15
+        x: 34
+      - frame: 20
+        x: 42
+      - frame: 35
+        x: 42
+      - frame: 40
+        x: 38
+
+  # ═══════════════════════════════════
+  # Olho Direito — Quadrado pixel-art
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_r
+    props:
+      x: 78
+      y: 22
+      w: 20
+      h: 20
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 20
+        y: 22
+      - frame: 21
+        h: 20
+        y: 22
+      - frame: 23
+        h: 12
+        y: 26
+      - frame: 25
+        h: 4
+        y: 30
+      - frame: 27
+        h: 12
+        y: 26
+      - frame: 29
+        h: 20
+        y: 22
+
+  # Pupila direita
+  - type: rect
+    id: pupil_r
+    props:
+      x: 86
+      y: 28
+      w: 8
+      h: 8
+      fill: false
+    keyframes:
+      - frame: 0
+        x: 86
+        easing: "linear"
+      - frame: 10
+        x: 82
+      - frame: 15
+        x: 82
+      - frame: 20
+        x: 90
+      - frame: 35
+        x: 90
+      - frame: 40
+        x: 86
+
+  # ═══════════════════════════════════
+  # Boca — Pac-Man style (abre e fecha)
+  # Corpo do pac-man
+  # ═══════════════════════════════════
+  - type: circle
+    id: pacman
+    props:
+      cx: 64
+      cy: 52
+      r: 7
+      fill: true
+    keyframes:
+      - frame: 0
+        cx: 48
+        easing: "linear"
+      - frame: 30
+        cx: 64
+      - frame: 60
+        cx: 80
+
+  # Boca do pac-man (rect preto que simula abertura)
+  # Como não temos "apagar", usamos uma linha de abertura
+  - type: line
+    id: pac_mouth
+    props:
+      x1: 64
+      y1: 52
+      x2: 75
+      y2: 52
+    keyframes:
+      - frame: 0
+        x1: 48
+        x2: 59
+        y1: 52
+        y2: 52
+        easing: "linear"
+      - frame: 30
+        x1: 64
+        x2: 75
+        y1: 52
+        y2: 52
+      - frame: 60
+        x1: 80
+        x2: 91
+        y1: 52
+        y2: 52
+
+  # ═══════════════════════════════════
+  # Pac-dots (3 dots que o pac-man come)
+  # ═══════════════════════════════════
+  - type: circle
+    id: dot1
+    props:
+      cx: 70
+      cy: 52
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 2
+      - frame: 18
+        r: 2
+      - frame: 20
+        r: 0
+
+  - type: circle
+    id: dot2
+    props:
+      cx: 82
+      cy: 52
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 2
+      - frame: 34
+        r: 2
+      - frame: 36
+        r: 0
+
+  - type: circle
+    id: dot3
+    props:
+      cx: 94
+      cy: 52
+      r: 2
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 2
+      - frame: 48
+        r: 2
+      - frame: 50
+        r: 0
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true

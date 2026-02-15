@@ -1,0 +1,87 @@
+screen:
+  width: 128
+  height: 64
+  fps: 20       # Aumentei para 20fps para maior fluidez
+  frames: 50
+
+elements:
+  # Olho Esquerdo (com Elasticidade)
+  - type: rect
+    id: eye_l
+    props:
+      x: 35
+      y: 20
+      w: 18
+      h: 26
+      fill: true
+      anti_alias: true
+    keyframes:
+      - frame: 0
+        h: 26
+        y: 19
+        easing: "ease-in-out"
+      - frame: 20
+        h: 26
+        y: 19
+        easing: "cubic-in"   # Queda rápida para fechar
+      - frame: 23
+        h: 2                 # Pisca (totalmente fechado)
+        y: 31
+        easing: "elastic"    # Abre com efeito de mola
+      - frame: 32
+        h: 26
+        y: 19
+
+  # Olho Direito (Leve atraso de 1 frame para parecer orgânico)
+  - type: rect
+    id: eye_r
+    props:
+      x: 75
+      y: 20
+      w: 18
+      h: 26
+      fill: true
+      anti_alias: true
+    keyframes:
+      - frame: 0
+        h: 26
+        y: 19
+        easing: "ease-in-out"
+      - frame: 21            # Começa 1 frame depois do esquerdo
+        h: 26
+        y: 19
+        easing: "cubic-in"
+      - frame: 24
+        h: 2
+        y: 31
+        easing: "elastic"
+      - frame: 33
+        h: 26
+        y: 19
+
+  # Boca (Movimento de respiração)
+  - type: line
+    id: mouth
+    props:
+      x1: 60
+      y1: 50
+      x2: 68
+      y2: 50
+    keyframes:
+      - frame: 0
+        y1: 50
+        y2: 50
+        easing: "ease-in-out"
+      - frame: 25            # Sobe levemente quando pisca
+        y1: 48
+        y2: 48
+        easing: "ease-in-out"
+      - frame: 50
+        y1: 50
+        y2: 50
+
+output:
+  format: "horizontal"
+  c_array: true
+  delta_compression: true    # Essencial aqui pela fluidez
+  gif: true

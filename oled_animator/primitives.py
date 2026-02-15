@@ -22,10 +22,15 @@ def _load_font(font_path: str = None, font_size: int = 10) -> ImageFont.ImageFon
     return DEFAULT_FONT
 
 
+def _normalize_coords(x0, y0, x1, y1):
+    """Ensure (x0, y0) is top-left and (x1, y1) is bottom-right."""
+    return [min(x0, x1), min(y0, y1), max(x0, x1), max(y0, y1)]
+
+
 def draw_rect(canvas: Canvas, x: int, y: int, w: int, h: int,
               fill: bool = True, anti_alias: bool = False):
     draw = ImageDraw.Draw(canvas.image)
-    coords = [x, y, x + w - 1, y + h - 1]
+    coords = _normalize_coords(x, y, x + w - 1, y + h - 1)
     if fill:
         draw.rectangle(coords, fill=1)
     else:
@@ -38,7 +43,9 @@ def draw_circle(canvas: Canvas, cx: int, cy: int, r: int,
         _draw_circle_aa(canvas, cx, cy, r, fill)
     else:
         draw = ImageDraw.Draw(canvas.image)
-        bbox = [cx - r, cy - r, cx + r, cy + r]
+        # Handle negative radius by taking absolute value
+        r = abs(r)
+        bbox = _normalize_coords(cx - r, cy - r, cx + r, cy + r)
         if fill:
             draw.ellipse(bbox, fill=1)
         else:
@@ -47,10 +54,12 @@ def draw_circle(canvas: Canvas, cx: int, cy: int, r: int,
 
 def _draw_circle_aa(canvas: Canvas, cx: int, cy: int, r: int, fill: bool):
     """Anti-aliased circle via 4x supersampling + dithering."""
+    # Handle negative radius
+    r = abs(r)
     big = Image.new("L", (canvas.width * AA_SCALE, canvas.height * AA_SCALE), 0)
     draw = ImageDraw.Draw(big)
     s = AA_SCALE
-    bbox = [(cx - r) * s, (cy - r) * s, (cx + r) * s, (cy + r) * s]
+    bbox = _normalize_coords((cx - r) * s, (cy - r) * s, (cx + r) * s, (cy + r) * s)
     if fill:
         draw.ellipse(bbox, fill=255)
     else:

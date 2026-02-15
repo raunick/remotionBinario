@@ -31,7 +31,7 @@ Use esta lista para rastrear o progresso da criação das animações com o `rem
 ## 🚗 Tema Automotivo & Ação
 - [ ] **Nose Smoke** (Fumaça saindo "nariz"/radiador)
 - [ ] **Nose Fire** (Fogo saindo do "nariz")
-- [ ] **Turbo** (Olhos girando como turbina)
+- [x] **Turbo** (Olhos comprimem e explodem com boost elastic)
 - [ ] **Headlights** (Olhos brilhando como faróis)
 - [ ] **Revs** (Contagiros/RPM)
 - [ ] **Shift** (Troca de marcha/Shift light)
@@ -55,6 +55,9 @@ Use esta lista para rastrear o progresso da criação das animações com o `rem
 
 ## 👾 Cultura Pop & Diversos
 - [ ] **Pong** (Jogo Pong nos olhos)
+- [x] **F1** (Shift lights + G-force squish)
+- [x] **One Piece** (Sparkle star eyes + mega grin)
+- [x] **Retro 70/80** (Pixel-art eyes + Pac-Man + scanlines)
 - [ ] **Music** (Equalizador visual)
 - [ ] **Cookie** (Comendo cookie)
 - [x] **Love** (Corações)
@@ -66,7 +69,7 @@ Use esta lista para rastrear o progresso da criação das animações com o `rem
 - [ ] **Sushi** (Sushi)
 - [ ] **Neon Sign** (Letreiro Neon)
 - [ ] **Neon Tube** (Tubo de neon)
-- [ ] **GTR Rain** (Lanterna GTR na chuva)
+- [x] **GTR Rain** (Chuva caindo + olhos tristes)
 - [ ] **Titan** (Referência Attack on Titan?)
 - [ ] **Tanjiro** (Demon Slayer)
 - [ ] **Nezuko** (Demon Slayer)

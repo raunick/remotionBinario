@@ -1,0 +1,290 @@
+# ☠️ ONE PIECE — Luffy viu carne! Olhos brilhando, sorriso enorme!
+# Inspirado no One Piece, sparkle eyes estilo anime, mega grin.
+
+screen:
+  width: 128
+  height: 64
+  fps: 20
+  frames: 60
+
+elements:
+  # ═══════════════════════════════════
+  # Olho Esquerdo — Estrela/Sparkle (cruz de rects)
+  # Barra vertical
+  # ═══════════════════════════════════
+  - type: rect
+    id: star_l_v
+    props:
+      x: 38
+      y: 18
+      w: 6
+      h: 24
+      fill: true
+    keyframes:
+      # Olho normal
+      - frame: 0
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+        easing: "ease-in-out"
+      # Reage! Transforma em estrela
+      - frame: 10
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+        easing: "elastic-out"
+      - frame: 22
+        x: 39
+        y: 14
+        w: 6
+        h: 34
+      # Pulsa (brilha!)
+      - frame: 32
+        x: 39
+        y: 16
+        w: 6
+        h: 30
+        easing: "elastic-out"
+      - frame: 42
+        x: 39
+        y: 14
+        w: 6
+        h: 34
+        easing: "elastic-out"
+      # Volta ao normal
+      - frame: 55
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+
+  # Barra horizontal da estrela esquerda
+  - type: rect
+    id: star_l_h
+    props:
+      x: 28
+      y: 28
+      w: 28
+      h: 6
+      fill: true
+    keyframes:
+      - frame: 0
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+        easing: "ease-in-out"
+      - frame: 10
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+        easing: "elastic-out"
+      - frame: 22
+        x: 26
+        y: 28
+        w: 32
+        h: 6
+      - frame: 32
+        x: 28
+        y: 28
+        w: 28
+        h: 6
+        easing: "elastic-out"
+      - frame: 42
+        x: 26
+        y: 28
+        w: 32
+        h: 6
+        easing: "elastic-out"
+      - frame: 55
+        x: 32
+        y: 20
+        w: 20
+        h: 22
+
+  # ═══════════════════════════════════
+  # Olho Direito — Estrela/Sparkle
+  # Barra vertical
+  # ═══════════════════════════════════
+  - type: rect
+    id: star_r_v
+    props:
+      x: 84
+      y: 18
+      w: 6
+      h: 24
+      fill: true
+    keyframes:
+      - frame: 0
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+        easing: "ease-in-out"
+      - frame: 11
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+        easing: "elastic-out"
+      - frame: 23
+        x: 83
+        y: 14
+        w: 6
+        h: 34
+      - frame: 33
+        x: 83
+        y: 16
+        w: 6
+        h: 30
+        easing: "elastic-out"
+      - frame: 43
+        x: 83
+        y: 14
+        w: 6
+        h: 34
+        easing: "elastic-out"
+      - frame: 56
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+
+  # Barra horizontal da estrela direita
+  - type: rect
+    id: star_r_h
+    props:
+      x: 72
+      y: 28
+      w: 28
+      h: 6
+      fill: true
+    keyframes:
+      - frame: 0
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+        easing: "ease-in-out"
+      - frame: 11
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+        easing: "elastic-out"
+      - frame: 23
+        x: 70
+        y: 28
+        w: 32
+        h: 6
+      - frame: 33
+        x: 72
+        y: 28
+        w: 28
+        h: 6
+        easing: "elastic-out"
+      - frame: 43
+        x: 70
+        y: 28
+        w: 32
+        h: 6
+        easing: "elastic-out"
+      - frame: 56
+        x: 76
+        y: 20
+        w: 20
+        h: 22
+
+  # ═══════════════════════════════════
+  # Boca — MEGA GRIN que abre com elastic!
+  # Barra principal do sorriso (larga)
+  # ═══════════════════════════════════
+  - type: rect
+    id: grin
+    props:
+      x: 52
+      y: 48
+      w: 24
+      h: 3
+      fill: true
+    keyframes:
+      # Boca pequena normal
+      - frame: 0
+        x: 58
+        y: 50
+        w: 12
+        h: 2
+        easing: "ease-in-out"
+      # NIKUUUU! Boca explode!
+      - frame: 10
+        x: 58
+        y: 50
+        w: 12
+        h: 2
+        easing: "elastic-out"
+      - frame: 24
+        x: 40
+        y: 48
+        w: 48
+        h: 4
+      # Pulsa de empolgação
+      - frame: 34
+        x: 44
+        y: 49
+        w: 40
+        h: 3
+        easing: "bounce-out"
+      - frame: 44
+        x: 40
+        y: 48
+        w: 48
+        h: 4
+        easing: "elastic-out"
+      # Volta
+      - frame: 55
+        x: 58
+        y: 50
+        w: 12
+        h: 2
+
+  # Linha superior do sorriso (curva simulada)
+  - type: line
+    id: grin_top
+    props:
+      x1: 52
+      y1: 48
+      x2: 76
+      y2: 48
+    keyframes:
+      - frame: 0
+        x1: 58
+        x2: 70
+        y1: 50
+        y2: 50
+        easing: "ease-in-out"
+      - frame: 10
+        x1: 58
+        x2: 70
+        y1: 50
+        y2: 50
+        easing: "elastic-out"
+      - frame: 24
+        x1: 38
+        x2: 90
+        y1: 47
+        y2: 47
+      - frame: 55
+        x1: 58
+        x2: 70
+        y1: 50
+        y2: 50
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true

@@ -15,7 +15,7 @@ Você pode usar os seguintes tipos em `type`:
 - `rect`: Requer `x`, `y`, `w`, `h`. Opcional: `fill`, `anti_alias`.
 - `line`: Requer `x1`, `y1`, `x2`, `y2`. Opcional: `anti_alias`.
 - `text`: Requer `x`, `y`, `text`. Opcional: `font_size` (padrão 10), `font_path`.
-- `sprite`: Requer `x`, `y`, `src` (caminho relativo). Opcional: `dithering`.
+- `sprite`: Requer `x`, `y`, `src` (caminho relativo para PNG). Opcional: `dithering`.
 
 ### 3. Animação (`keyframes`)
 - A lista `keyframes` define estados em quadros específicos.
@@ -37,12 +37,38 @@ output:
   delta_compression: true # Recomendado para economizar flash
 ```
 
+### 5. SVG / Sprites Importados
+- Use `tools/svg_importer/svg2sprite.js` para converter qualquer SVG em sprite 1-bit.
+- O comando gera um PNG otimizado e opcionalmente um C-header (`.h`).
+- Opções disponíveis: `--width`, `--dither` (Floyd-Steinberg), `--invert`, `--c-header`.
+- Após importar, use o tipo `sprite` no YAML:
+```yaml
+  - type: sprite
+    id: meu_icone
+    props:
+      x: 10
+      y: 5
+      src: "assets/meu_icone.png"
+```
+
+### 6. Studio Dashboard
+- O projeto inclui um **dashboard web profissional** acessível via `python3 main.py --serve`.
+- O Studio possui:
+  - Editor Monaco (YAML) com hot-reload
+  - Preview OLED em tempo real com simulação de hardware
+  - Importação de SVG via drag & drop
+  - Biblioteca de assets (sprites importados)
+  - Exportação direta de C-Array, Delta e GIF
+  - Visualizador de memória ESP32 (Flash usage)
+
 ## 🎯 Diretrizes de Comportamento
 
 1.  **Validação Rígida**: Se o usuário pedir um tamanho "100x100", CORRIJA silenciosamente para "104x104" (divisível por 8) ou avise.
 2.  **Criatividade**: Se o usuário for vago ("faça algo legal"), crie animações complexas usando múltiplos elementos, easings variados e timing preciso.
 3.  **Simplicidade**: Para sistemas embarcados, menos é mais. Evite milhares de objetos.
 4.  **Formato de Resposta**: Retorne **APENAS** o bloco de código YAML, seguido de uma breve explicação se necessário.
+5.  **SVG**: Se o usuário quiser usar um desenho/logo complexo, sugira importar via SVG Importer e usar como `sprite`.
+6.  **Delta**: Sempre recomende `delta_compression: true` para projetos ESP32/Arduino para economizar Flash.
 
 ## 📝 Exemplos de Treinamento
 
@@ -123,6 +149,41 @@ elements:
         y: 45 # Posição final no chão
       - frame: 39
         y: 45
+```
+
+### Usuário: "Use meu logo.svg como sprite animado"
+
+```yaml
+# Primeiro importe o SVG:
+# node tools/svg_importer/svg2sprite.js logo.svg --width 32 --dither
+
+screen:
+  width: 128
+  height: 64
+  fps: 12
+  frames: 24
+
+elements:
+  - type: sprite
+    id: logo
+    props:
+      x: 48
+      y: -32 # Começa acima da tela
+      src: "assets/logo.png"
+    keyframes:
+      - frame: 0
+        y: -32
+        easing: "elastic"
+      - frame: 12
+        y: 16 # Centro vertical
+      - frame: 23
+        y: 16
+
+output:
+  c_array: true
+  gif: true
+  delta_compression: true
+  format: "horizontal"
 ```
 
 ---

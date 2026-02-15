@@ -1,0 +1,266 @@
+# 🌧️ RAIN — Olhos tristes com gotas de chuva caindo
+# Inspirado em dias chuvosos, melancolia, GTR na chuva.
+
+screen:
+  width: 128
+  height: 64
+  fps: 15
+  frames: 60
+
+elements:
+  # ═══════════════════════════════════
+  # Olho Esquerdo — Semi-fechado, triste
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_l
+    props:
+      x: 32
+      y: 26
+      w: 22
+      h: 14
+      fill: true
+    keyframes:
+      - frame: 0
+        y: 26
+        h: 14
+        easing: "ease-in-out"
+      # Pisca lento (sonolento/triste)
+      - frame: 28
+        y: 26
+        h: 14
+        easing: "cubic-in"
+      - frame: 33
+        y: 32
+        h: 2
+        easing: "ease-out"
+      - frame: 40
+        y: 26
+        h: 14
+
+  # Pálpebra superior esquerda (faz olho parecer triste)
+  - type: rect
+    id: lid_l
+    props:
+      x: 30
+      y: 20
+      w: 26
+      h: 10
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 10
+        easing: "ease-in-out"
+      - frame: 30
+        h: 12
+        easing: "ease-in-out"
+      - frame: 60
+        h: 10
+
+  # ═══════════════════════════════════
+  # Olho Direito — Semi-fechado, triste
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_r
+    props:
+      x: 74
+      y: 26
+      w: 22
+      h: 14
+      fill: true
+    keyframes:
+      - frame: 0
+        y: 26
+        h: 14
+        easing: "ease-in-out"
+      - frame: 29
+        y: 26
+        h: 14
+        easing: "cubic-in"
+      - frame: 34
+        y: 32
+        h: 2
+        easing: "ease-out"
+      - frame: 41
+        y: 26
+        h: 14
+
+  # Pálpebra superior direita
+  - type: rect
+    id: lid_r
+    props:
+      x: 72
+      y: 20
+      w: 26
+      h: 10
+      fill: true
+    keyframes:
+      - frame: 0
+        h: 10
+        easing: "ease-in-out"
+      - frame: 30
+        h: 12
+        easing: "ease-in-out"
+      - frame: 60
+        h: 10
+
+  # ═══════════════════════════════════
+  # Gotas de chuva caindo
+  # ═══════════════════════════════════
+
+  # Gota 1
+  - type: rect
+    id: drop1
+    props:
+      x: 15
+      y: 0
+      w: 2
+      h: 5
+      fill: true
+    keyframes:
+      - frame: 0
+        y: -5
+        easing: "linear"
+      - frame: 15
+        y: 64
+
+  # Gota 2
+  - type: rect
+    id: drop2
+    props:
+      x: 50
+      y: 0
+      w: 2
+      h: 4
+      fill: true
+    keyframes:
+      - frame: 5
+        y: -4
+        easing: "linear"
+      - frame: 22
+        y: 64
+
+  # Gota 3
+  - type: rect
+    id: drop3
+    props:
+      x: 110
+      y: 0
+      w: 2
+      h: 6
+      fill: true
+    keyframes:
+      - frame: 3
+        y: -6
+        easing: "linear"
+      - frame: 20
+        y: 64
+
+  # Gota 4
+  - type: rect
+    id: drop4
+    props:
+      x: 65
+      y: 0
+      w: 2
+      h: 4
+      fill: true
+    keyframes:
+      - frame: 10
+        y: -4
+        easing: "linear"
+      - frame: 28
+        y: 64
+
+  # Gota 5 (segunda passada)
+  - type: rect
+    id: drop5
+    props:
+      x: 25
+      y: 0
+      w: 2
+      h: 5
+      fill: true
+    keyframes:
+      - frame: 20
+        y: -5
+        easing: "linear"
+      - frame: 38
+        y: 64
+
+  # Gota 6
+  - type: rect
+    id: drop6
+    props:
+      x: 100
+      y: 0
+      w: 2
+      h: 4
+      fill: true
+    keyframes:
+      - frame: 25
+        y: -4
+        easing: "linear"
+      - frame: 42
+        y: 64
+
+  # Gota 7
+  - type: rect
+    id: drop7
+    props:
+      x: 8
+      y: 0
+      w: 2
+      h: 4
+      fill: true
+    keyframes:
+      - frame: 30
+        y: -4
+        easing: "linear"
+      - frame: 48
+        y: 64
+
+  # Gota 8
+  - type: rect
+    id: drop8
+    props:
+      x: 120
+      y: 0
+      w: 2
+      h: 5
+      fill: true
+    keyframes:
+      - frame: 35
+        y: -5
+        easing: "linear"
+      - frame: 52
+        y: 64
+
+  # ═══════════════════════════════════
+  # Boca — Frown (triste)
+  # ═══════════════════════════════════
+  - type: line
+    id: mouth
+    props:
+      x1: 56
+      y1: 50
+      x2: 72
+      y2: 50
+    keyframes:
+      - frame: 0
+        y1: 52
+        y2: 52
+        easing: "ease-in-out"
+      - frame: 30
+        y1: 54
+        y2: 54
+        easing: "ease-in-out"
+      - frame: 60
+        y1: 52
+        y2: 52
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true

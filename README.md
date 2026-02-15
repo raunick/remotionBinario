@@ -163,7 +163,22 @@ output:
 
 ### Easing Functions
 
-`linear` · `ease-in` · `ease-out` · `ease-in-out` · `cubic-in` · `cubic-out` · `cubic-in-out` · `elastic` · `bounce`
+`linear` · `ease-in` · `ease-out` · `ease-in-out` · `cubic-in` · `cubic-out` · `cubic-in-out` · `elastic` · `elastic-out` · `elastic-in-out` · `bounce` · `bounce-out`
+
+> [!TIP]
+> **Dasai Mochi Style**: Use `elastic-out` for the classic "bouncy" spring effect. The engine now includes automatic coordinate normalization, making it robust against negative dimensions during high-elasticity bounces.
+
+---
+
+## 🍶 Dasai Mochi Pack
+
+This project includes a special set of examples inspired by the **Dasai Mochi** (Gen 3) robot. You can find them in `examples/dasai_mochi/`:
+
+- **Turbo**: Boost explosion with elastic eyes and speed lines.
+- **Rain**: Sad melancholy with falling rain drops.
+- **F1**: Sequential shift lights and G-force effects.
+- **One Piece**: Star-sparkle eyes and mega-grin (Luffy mode).
+- **Retro**: 70s/80s Arcade vibes with scanlines and Pac-Man.
 
 ---
 

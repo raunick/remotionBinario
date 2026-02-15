@@ -1,0 +1,244 @@
+# 🏁 FORMULA 1 — Olhos seguem carro + shift lights no topo
+# Inspirado em F1, semáforos de largada, G-force.
+
+screen:
+  width: 128
+  height: 64
+  fps: 20
+  frames: 80
+
+elements:
+  # ═══════════════════════════════════
+  # SHIFT LIGHTS — 5 dots no topo que acendem sequencialmente
+  # ═══════════════════════════════════
+  - type: circle
+    id: light1
+    props:
+      cx: 44
+      cy: 5
+      r: 0
+      fill: true
+    keyframes:
+      - frame: 0
+        r: 0
+        easing: "cubic-out"
+      - frame: 5
+        r: 3
+      - frame: 30
+        r: 3
+        easing: "cubic-in"
+      - frame: 35
+        r: 0
+
+  - type: circle
+    id: light2
+    props:
+      cx: 54
+      cy: 5
+      r: 0
+      fill: true
+    keyframes:
+      - frame: 5
+        r: 0
+        easing: "cubic-out"
+      - frame: 10
+        r: 3
+      - frame: 30
+        r: 3
+        easing: "cubic-in"
+      - frame: 35
+        r: 0
+
+  - type: circle
+    id: light3
+    props:
+      cx: 64
+      cy: 5
+      r: 0
+      fill: true
+    keyframes:
+      - frame: 10
+        r: 0
+        easing: "cubic-out"
+      - frame: 15
+        r: 3
+      - frame: 30
+        r: 3
+        easing: "cubic-in"
+      - frame: 35
+        r: 0
+
+  - type: circle
+    id: light4
+    props:
+      cx: 74
+      cy: 5
+      r: 0
+      fill: true
+    keyframes:
+      - frame: 15
+        r: 0
+        easing: "cubic-out"
+      - frame: 20
+        r: 3
+      - frame: 30
+        r: 3
+        easing: "cubic-in"
+      - frame: 35
+        r: 0
+
+  - type: circle
+    id: light5
+    props:
+      cx: 84
+      cy: 5
+      r: 0
+      fill: true
+    keyframes:
+      - frame: 20
+        r: 0
+        easing: "cubic-out"
+      - frame: 25
+        r: 3
+      - frame: 30
+        r: 3
+        easing: "cubic-in"
+      - frame: 35
+        r: 0
+
+  # ═══════════════════════════════════
+  # Olho Esquerdo — Segue "carro" da esquerda pra direita
+  # Com G-force squish na aceleração
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_l
+    props:
+      x: 30
+      y: 20
+      w: 22
+      h: 24
+      fill: true
+    keyframes:
+      # Repouso esperando
+      - frame: 0
+        x: 30
+        w: 22
+        h: 24
+        y: 20
+      # Lights acesos — tensão
+      - frame: 30
+        x: 30
+        w: 22
+        h: 24
+        y: 20
+        easing: "cubic-in"
+      # GO! Squish horizontal (G-force)
+      - frame: 35
+        x: 26
+        w: 14
+        h: 32
+        y: 16
+        easing: "elastic-out"
+      # Snap de volta + olha pra direita
+      - frame: 48
+        x: 36
+        w: 22
+        h: 24
+        y: 20
+        easing: "ease-in-out"
+      # Olha pra esquerda (carro passou)
+      - frame: 60
+        x: 24
+        w: 22
+        h: 24
+        y: 20
+        easing: "ease-in-out"
+      # Volta ao centro
+      - frame: 75
+        x: 30
+        w: 22
+        h: 24
+        y: 20
+
+  # ═══════════════════════════════════
+  # Olho Direito — Mesmo tracking, leve delay
+  # ═══════════════════════════════════
+  - type: rect
+    id: eye_r
+    props:
+      x: 76
+      y: 20
+      w: 22
+      h: 24
+      fill: true
+    keyframes:
+      - frame: 0
+        x: 76
+        w: 22
+        h: 24
+        y: 20
+      - frame: 30
+        x: 76
+        w: 22
+        h: 24
+        y: 20
+        easing: "cubic-in"
+      - frame: 36
+        x: 72
+        w: 14
+        h: 32
+        y: 16
+        easing: "elastic-out"
+      - frame: 49
+        x: 82
+        w: 22
+        h: 24
+        y: 20
+        easing: "ease-in-out"
+      - frame: 61
+        x: 70
+        w: 22
+        h: 24
+        y: 20
+        easing: "ease-in-out"
+      - frame: 76
+        x: 76
+        w: 22
+        h: 24
+        y: 20
+
+  # ═══════════════════════════════════
+  # Boca — Reage ao GO com surpresa
+  # ═══════════════════════════════════
+  - type: line
+    id: mouth
+    props:
+      x1: 56
+      y1: 50
+      x2: 72
+      y2: 50
+    keyframes:
+      - frame: 0
+        x1: 60
+        x2: 68
+        y1: 50
+        y2: 50
+        easing: "ease-in-out"
+      - frame: 33
+        x1: 54
+        x2: 74
+        y1: 48
+        y2: 48
+        easing: "elastic-out"
+      - frame: 50
+        x1: 60
+        x2: 68
+        y1: 50
+        y2: 50
+
+output:
+  c_array: true
+  gif: true
+  ascii_preview: false
+  format: "horizontal"
+  delta_compression: true
