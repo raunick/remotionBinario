@@ -332,6 +332,110 @@ def create_app():
             except:
                 pass
 
+    # ───────────────────────────────────
+    # Image2CPP Features
+    # ───────────────────────────────────
+    @app.route("/api/image2cpp/convert", methods=["POST"])
+    def image2cpp_convert():
+        """Convert uploaded image(s) or ZIP to 1-bit Canvas & C-array."""
+        if "file" not in request.files:
+            return jsonify({"error": "No file uploaded"}), 400
+
+        file = request.files["file"]
+        if not file.filename:
+            return jsonify({"error": "No filename"}), 400
+
+        # Settings
+        settings = {
+            "width": int(request.form.get("width", 128)),
+            "height": int(request.form.get("height", 64)),
+            "background": request.form.get("background", "black"),
+            "scale_mode": request.form.get("scale_mode", "fit"),
+            "dither": request.form.get("dither", "floyd-steinberg"),
+            "threshold": int(request.form.get("threshold", 128)),
+            "invert": request.form.get("invert", "false") == "true",
+            "rotate": int(request.form.get("rotate", 0)),
+        }
+
+        try:
+            results = []
+            filename = file.filename.lower()
+
+            if filename.endswith(".zip"):
+                from oled_animator.image_converter import process_zip
+                # Read zip into memory
+                file_bytes = io.BytesIO(file.read())
+                processed_list = process_zip(file_bytes, settings)
+                
+                for item in processed_list:
+                    # Render to C-array
+                    c_data = item["canvas"].to_bytes("horizontal") # Default preview format
+                    
+                    # Convert preview to base64
+                    buf = io.BytesIO()
+                    item["preview_image"].save(buf, format="PNG")
+                    b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+                    
+                    results.append({
+                        "name": item["name"],
+                        "preview": b64,
+                        "c_array": list(c_data), # Send as list of ints for frontend to format
+                        "width": item["width"],
+                        "height": item["height"]
+                    })
+            
+            else:
+                from oled_animator.image_converter import process_image
+                # Process single image
+                file_bytes = io.BytesIO(file.read())
+                item = process_image(file_bytes, file.filename, settings)
+                
+                if "error" in item:
+                    return jsonify({"error": item["error"]}), 400
+
+                c_data = item["canvas"].to_bytes("horizontal")
+                buf = io.BytesIO()
+                item["preview_image"].save(buf, format="PNG")
+                b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+
+                results.append({
+                    "name": item["name"],
+                    "preview": b64,
+                    "c_array": list(c_data),
+                    "width": item["width"],
+                    "height": item["height"]
+                })
+
+            return jsonify({"results": results})
+
+        except Exception as e:
+            traceback.print_exc()
+            return jsonify({"error": str(e)}), 500
+
+    @app.route("/api/image2cpp/reverse", methods=["POST"])
+    def image2cpp_reverse():
+        """Convert C-array hex string back to image preview."""
+        data = request.get_json()
+        hex_string = data.get("hex", "")
+        width = int(data.get("width", 128))
+        height = int(data.get("height", 64))
+        mode = data.get("mode", "horizontal")
+
+        try:
+            from oled_animator.image_converter import bytes_to_image
+            img = bytes_to_image(hex_string, width, height, mode)
+            
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            b64 = base64.b64encode(buf.getvalue()).decode("ascii")
+            
+            return jsonify({"preview": b64})
+            
+        except Exception as e:
+            traceback.print_exc()
+            return jsonify({"error": str(e)}), 500
+
+
     return app
 
 

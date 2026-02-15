@@ -243,7 +243,9 @@
             background: var(--bg-primary);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            /* overflow: hidden; */
+            min-height: 0;
+            min-width: 0;
         }
 
         .editor-header {
@@ -715,6 +717,44 @@
             font-size: 11px;
             font-family: 'JetBrains Mono', monospace;
         }
+
+        /* Workspaces */
+        .workspace {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            flex: 1;
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .workspace.active {
+            display: flex;
+        }
+
+        .header-tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-panel-hover);
+        }
+
+        .header-tab-btn.active {
+            background: var(--bg-panel);
+            color: var(--accent);
+            border-color: var(--border);
+        }
     </style>
 </head>
 
@@ -776,73 +816,240 @@
         <main class="center-panel">
             <div class="editor-header">
                 <div class="editor-indicator" id="editor-indicator"></div>
-                <span class="editor-tab" id="editor-tab">untitled.yaml</span>
+                <span class="editor-tab" id="editor-tab" style="margin-right:20px">untitled.yaml</span>
+
+                <div style="display:flex; gap:4px">
+                    <button class="header-tab-btn active" data-ws="code" onclick="switchWorkspace('code')">
+                        <i data-lucide="code" style="width:12px;height:12px"></i> Code
+                    </button>
+                    <button class="header-tab-btn" data-ws="canvas" onclick="switchWorkspace('canvas')">
+                        <i data-lucide="edit-3" style="width:12px;height:12px"></i> Canvas
+                    </button>
+                    <button class="header-tab-btn" data-ws="image2cpp" onclick="switchWorkspace('image2cpp')">
+                        <i data-lucide="image" style="width:12px;height:12px"></i> Image2CPP
+                    </button>
+                </div>
+
                 <span
                     style="margin-left:auto;font-size:10px;color:var(--text-muted);font-family:'JetBrains Mono',monospace"
                     id="editor-status">
                     Hot Reload: ON
                 </span>
             </div>
-            <div id="editor-container"></div>
 
-            <!-- Tools Bar -->
-            <div class="tools-bar">
-                <div class="tools-tabs">
-                    <div class="tools-tab active" data-tab="svg-import">
-                        <i data-lucide="upload" style="width:12px;height:12px"></i> SVG Import
+            <!-- CODE WORKSPACE -->
+            <div id="workspace-code" class="workspace active">
+                <div id="editor-container"></div>
+
+                <!-- Tools Bar -->
+                <div class="tools-bar">
+                    <div class="tools-tabs">
+                        <div class="tools-tab active" data-tab="svg-import">
+                            <i data-lucide="upload" style="width:12px;height:12px"></i> SVG Import
+                        </div>
+                        <div class="tools-tab" data-tab="export">
+                            <i data-lucide="download" style="width:12px;height:12px"></i> Exportar
+                        </div>
                     </div>
-                    <div class="tools-tab" data-tab="export">
-                        <i data-lucide="download" style="width:12px;height:12px"></i> Exportar
+                    <div class="tools-content">
+                        <!-- SVG Import Panel -->
+                        <div class="tool-panel active" id="panel-svg-import">
+                            <div class="drop-zone" id="svg-drop-zone">
+                                <i data-lucide="upload-cloud"
+                                    style="width:24px;height:24px;display:block;margin:0 auto 8px"></i>
+                                Arraste um SVG aqui ou clique para selecionar
+                                <input type="file" accept=".svg" id="svg-file-input" style="display:none">
+                            </div>
+                            <div class="import-options">
+                                <label><input type="number" id="import-width" value="64" min="8" max="256" step="8">
+                                    largura</label>
+                                <label><input type="checkbox" id="import-dither"> Dithering</label>
+                                <label><input type="checkbox" id="import-invert"> Inverter</label>
+                            </div>
+                        </div>
+                        <!-- Export Panel -->
+                        <div class="tool-panel" id="panel-export">
+                            <div class="export-grid">
+                                <button class="btn" onclick="exportScene('c_array')">
+                                    <i data-lucide="file-code" style="width:14px;height:14px"></i> C-Array (.h)
+                                </button>
+                                <button class="btn" onclick="exportScene('delta')">
+                                    <i data-lucide="git-branch" style="width:14px;height:14px"></i> Delta (.h)
+                                </button>
+                                <button class="btn" onclick="exportScene('gif')">
+                                    <i data-lucide="film" style="width:14px;height:14px"></i> GIF
+                                </button>
+                            </div>
+                            <div class="import-options" style="margin-top:8px">
+                                <label>Formato:
+                                    <select id="export-format">
+                                        <option value="horizontal">Horizontal (Adafruit)</option>
+                                        <option value="vertical">Vertical (ST7565)</option>
+                                        <option value="page">Page (U8g2)</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div><!-- /workspace-code -->
 
-                <div class="tools-content">
-                    <!-- SVG Import Panel -->
-                    <div class="tool-panel active" id="panel-svg-import">
-                        <div class="drop-zone" id="svg-drop-zone">
-                            <i data-lucide="upload-cloud"
-                                style="width:24px;height:24px;display:block;margin:0 auto 8px"></i>
-                            Arraste um SVG aqui ou clique para selecionar
-                            <input type="file" accept=".svg" id="svg-file-input" style="display:none">
-                        </div>
-                        <div class="import-options">
-                            <label><input type="number" id="import-width" value="64" min="8" max="256" step="8">
-                                largura</label>
-                            <label><input type="checkbox" id="import-dither"> Dithering</label>
-                            <label><input type="checkbox" id="import-invert"> Inverter</label>
-                        </div>
+            <!-- CANVAS WORKSPACE -->
+            <div id="workspace-canvas" class="workspace" style="background:var(--bg-primary)">
+                <div style="display:flex; height:100%; gap:1px; background:var(--border)">
+                    <!-- Toolbar -->
+                    <div
+                        style="width:40px; background:var(--bg-secondary); display:flex; flex-direction:column; align-items:center; padding:8px 0; gap:8px">
+                        <button class="tool-btn active" data-tool="pencil" title="Lápis (P)"><i data-lucide="pencil"
+                                style="width:16px;height:16px"></i></button>
+                        <button class="tool-btn" data-tool="line" title="Linha (L)"><i data-lucide="minus"
+                                style="width:16px;height:16px"></i></button>
+                        <button class="tool-btn" data-tool="rect" title="Retângulo (R)"><i data-lucide="square"
+                                style="width:16px;height:16px"></i></button>
+                        <button class="tool-btn" data-tool="circle" title="Círculo (C)"><i data-lucide="circle"
+                                style="width:16px;height:16px"></i></button>
+                        <button class="tool-btn" data-tool="eraser" title="Borracha (E)"><i data-lucide="eraser"
+                                style="width:16px;height:16px"></i></button>
+                        <div style="width:20px; height:1px; background:var(--border); margin:4px 0"></div>
+                        <button class="tool-btn" id="btn-clear-canvas" title="Limpar"><i data-lucide="trash-2"
+                                style="width:16px;height:16px; color:var(--danger)"></i></button>
+                        <button class="tool-btn" id="btn-invert-canvas" title="Inverter Cores"><i data-lucide="contrast"
+                                style="width:16px;height:16px"></i></button>
                     </div>
-
-                    <!-- Export Panel -->
-                    <div class="tool-panel" id="panel-export">
-                        <div class="export-grid">
-                            <button class="btn" onclick="exportScene('c_array')">
-                                <i data-lucide="file-code" style="width:14px;height:14px"></i> C-Array (.h)
-                            </button>
-                            <button class="btn" onclick="exportScene('delta')">
-                                <i data-lucide="git-branch" style="width:14px;height:14px"></i> Delta (.h)
-                            </button>
-                            <button class="btn" onclick="exportScene('gif')">
-                                <i data-lucide="film" style="width:14px;height:14px"></i> GIF
-                            </button>
-                        </div>
-                        <div class="import-options" style="margin-top:8px">
-                            <label>Formato:
-                                <select id="export-format">
-                                    <option value="horizontal">Horizontal (Adafruit)</option>
-                                    <option value="vertical">Vertical (ST7565)</option>
-                                    <option value="page">Page (U8g2)</option>
+                    <!-- Canvas Area -->
+                    <div
+                        style="flex:1; background:var(--bg-primary); position:relative; overflow:hidden; display:flex; flex-direction:column">
+                        <div
+                            style="height:32px; border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 8px; justify-content:space-between; font-size:10px; color:var(--text-muted)">
+                            <div style="display:flex; gap:8px; align-items:center">
+                                Zoom: <select id="canvas-zoom" style="padding:2px">
+                                    <option value="1">1x</option>
+                                    <option value="2">2x</option>
+                                    <option value="4">4x</option>
+                                    <option value="8" selected>8x</option>
+                                    <option value="16">16x</option>
                                 </select>
-                            </label>
+                                <label><input type="checkbox" id="canvas-grid" checked> Grid</label>
+                            </div>
+                            <span id="canvas-coords">0, 0</span>
+                        </div>
+                        <div id="canvas-scroll-area"
+                            style="flex:1; overflow:auto; display:flex; justify-content:center; align-items:center; background:#1a1a1a; cursor:crosshair">
+                            <canvas id="pixel-canvas" width="128" height="64"
+                                style="image-rendering:pixelated; background:white; box-shadow:0 0 20px rgba(0,0,0,0.5)"></canvas>
+                        </div>
+                    </div>
+                    <!-- Properties -->
+                    <div
+                        style="width:260px; background:var(--bg-secondary); display:flex; flex-direction:column; border-left:1px solid var(--border)">
+                        <div class="panel-title" style="padding:12px">Propriedades</div>
+                        <div
+                            style="padding:0 12px; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px">
+                            <label class="import-options">W <input type="number" id="cv-width" value="128"></label>
+                            <label class="import-options">H <input type="number" id="cv-height" value="64"></label>
+                        </div>
+                        <div class="panel-title" style="padding:12px; border-top:1px solid var(--border)">Gerador de
+                            Código</div>
+                        <div style="padding:0 12px; display:flex; flex-direction:column; gap:8px; flex:1">
+                            <label class="import-options">Plataforma: <select id="cv-platform" style="width:100%">
+                                    <option value="adafruit">Adafruit GFX / SSD1306</option>
+                                    <option value="u8g2">U8g2 / U8x8</option>
+                                    <option value="tft_espi">TFT_eSPI (Sprite)</option>
+                                </select></label>
+                            <label class="import-options"><input type="checkbox" id="cv-wrapper" checked> Wrapper
+                                Func</label>
+                            <textarea id="cv-code-output" readonly
+                                style="flex:1; background:var(--bg-primary); border:1px solid var(--border); color:var(--text-primary); font-family:'JetBrains Mono',monospace; font-size:10px; padding:8px; border-radius:4px; resize:none; margin-bottom:12px; white-space:pre"></textarea>
+                            <button class="btn btn-sm" onclick="copyCanvasCode()" style="margin-bottom:12px">Copiar
+                                Código</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </div><!-- /workspace-canvas -->
+
+            <!-- IMAGE2CPP WORKSPACE -->
+            <div id="workspace-image2cpp" class="workspace" style="background:var(--bg-primary)">
+                <div style="display:flex; gap:16px; height:100%; padding:16px">
+                    <!-- Left: Upload & Settings -->
+                    <div style="flex:1; display:flex; flex-direction:column; gap:12px; overflow-y:auto">
+                        <div class="drop-zone" id="img-drop-zone">
+                            <i data-lucide="image-plus"
+                                style="width:24px;height:24px;display:block;margin:0 auto 8px"></i>
+                            Arraste imagens ou ZIP aqui
+                            <input type="file" accept=".png,.jpg,.jpeg,.bmp,.gif,.zip" id="img-file-input" multiple
+                                style="display:none">
+                        </div>
+                        <div class="panel-title">Configurações</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+                            <label class="import-options">Largura <input type="number" id="img-width"
+                                    value="128"></label>
+                            <label class="import-options">Altura <input type="number" id="img-height"
+                                    value="64"></label>
+                            <label class="import-options">Threshold <input type="number" id="img-threshold" value="128"
+                                    min="0" max="255"></label>
+                            <label class="import-options">Rotação <select id="img-rotate">
+                                    <option value="0">0°</option>
+                                    <option value="90">90°</option>
+                                    <option value="180">180°</option>
+                                    <option value="270">270°</option>
+                                </select></label>
+                        </div>
+                        <div class="import-options" style="gap:16px">
+                            <label>Fundo: <select id="img-bg">
+                                    <option value="black">Preto</option>
+                                    <option value="white">Branco</option>
+                                    <option value="transparent">Transparente</option>
+                                </select></label>
+                            <label>Escala: <select id="img-scale">
+                                    <option value="fit">Fit</option>
+                                    <option value="stretch">Esticar</option>
+                                    <option value="center">Centralizar</option>
+                                    <option value="original">Original</option>
+                                </select></label>
+                        </div>
+                        <div class="import-options" style="gap:16px">
+                            <label>Dithering: <select id="img-dither">
+                                    <option value="floyd-steinberg">Floyd-Steinberg</option>
+                                    <option value="atkinson">Atkinson</option>
+                                    <option value="stucki">Stucki</option>
+                                    <option value="ordered">Ordered</option>
+                                    <option value="simple">Simple</option>
+                                </select></label>
+                            <label><input type="checkbox" id="img-invert"> Inverter</label>
+                        </div>
+                        <button class="btn btn-accent" id="btn-convert-img" style="justify-content:center"><i
+                                data-lucide="refresh-cw" style="width:14px;height:14px"></i> Converter /
+                            Preview</button>
+                        <div style="border-top:1px solid var(--border); padding-top:12px">
+                            <div class="panel-title">Reverse</div>
+                            <textarea id="reverse-hex" placeholder="Cole C-array hexadecimal..."
+                                style="width:100%; height:60px; background:var(--bg-primary); border:1px solid var(--border); color:var(--text-primary); font-family:monospace; font-size:10px; padding:8px; border-radius:4px; resize:none"></textarea>
+                            <button class="btn btn-sm" id="btn-reverse" style="margin-top:6px; width:100%">Visualizar
+                                Hex</button>
+                        </div>
+                    </div>
+                    <!-- Right: Output -->
+                    <div style="flex:1; display:flex; flex-direction:column;">
+                        <div class="panel-title">Código Gerado</div>
+                        <textarea id="img-output-code" readonly
+                            style="flex:1; background:var(--bg-primary); border:1px solid var(--border); color:var(--text-primary); font-family:'JetBrains Mono',monospace; font-size:11px; padding:12px; border-radius:6px; resize:none; margin-bottom:8px"></textarea>
+                        <div style="display:flex; gap:8px">
+                            <button class="btn btn-sm" onclick="copyToClipboard()">Copiar</button>
+                            <span style="flex:1"></span>
+                            <div class="import-options" style="margin:0">Draw Mode: <select id="img-draw-mode">
+                                    <option value="horizontal">Horizontal</option>
+                                    <option value="vertical">Vertical</option>
+                                    <option value="page">Page</option>
+                                </select></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /workspace-image2cpp -->
+
+        </main><!-- /center-panel -->
 
         <!-- ═══ RIGHT PANEL (Preview + Info) ═══ -->
         <aside class="right-panel">
-
             <!-- OLED Preview -->
             <div class="panel-block">
                 <div class="panel-title">
@@ -858,14 +1065,12 @@
                         Edite o YAML para ver o preview
                     </div>
                 </div>
-
                 <div class="color-modes">
                     <div class="color-mode white active" data-color="white" title="Branco"></div>
                     <div class="color-mode blue" data-color="blue" title="Azul"></div>
                     <div class="color-mode yellow" data-color="yellow" title="Amarelo"></div>
                     <div class="color-mode green" data-color="green" title="Verde"></div>
                 </div>
-
                 <div class="player-controls" id="player-controls" style="display:none">
                     <button class="btn btn-sm" id="btn-prev" title="Frame anterior">
                         <i data-lucide="skip-back" style="width:12px;height:12px"></i>
@@ -996,6 +1201,38 @@ output:
                 `data:text/javascript;charset=utf-8,${encodeURIComponent(
                     `self.MonacoEnvironment={baseUrl:"https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/"};importScripts("https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/base/worker/workerMain.js");`
                 )}`
+        };
+
+        // ═══════════════════════════════════════════
+        // WORKSPACE MANAGEMENT
+        // ═══════════════════════════════════════════
+        window.switchWorkspace = function (name) {
+            // 1. Update Tabs
+            document.querySelectorAll('.header-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.ws === name);
+            });
+
+            // 2. Update Workspaces
+            document.querySelectorAll('.workspace').forEach(ws => {
+                ws.classList.remove('active');
+                if (ws.id === `workspace-${name}`) ws.classList.add('active');
+            });
+
+            // 3. Special handling
+            if (name === 'code' && editor) {
+                setTimeout(() => editor.layout(), 50);
+            } else if (name === 'canvas' && window.canvasEditor) {
+                if (window.canvasEditor.resize) window.canvasEditor.resize();
+            }
+
+            // 4. Update Title
+            const titleSpan = document.getElementById('editor-tab');
+            if (titleSpan) {
+                if (name === 'canvas') titleSpan.textContent = 'Bitmap Editor';
+                else if (name === 'image2cpp') titleSpan.textContent = 'Image Converter';
+                else if (currentScene) titleSpan.textContent = currentScene;
+                else titleSpan.textContent = 'untitled.yaml';
+            }
         };
 
         require(['vs/editor/editor.main'], function () {
@@ -1478,6 +1715,441 @@ output:
             toast.className = `toast ${type} show`;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ═══════════════════════════════════════════
+        // IMAGE2CPP LOGIC
+        // ═══════════════════════════════════════════
+        function setupImage2CPP() {
+            const dropZone = document.getElementById('img-drop-zone');
+            const fileInput = document.getElementById('img-file-input');
+            const convertBtn = document.getElementById('btn-convert-img');
+            const reverseBtn = document.getElementById('btn-reverse');
+
+            // Drag & Drop
+            dropZone.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--accent)';
+                dropZone.style.background = 'var(--accent-glow)';
+            });
+
+            dropZone.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border)';
+                dropZone.style.background = 'transparent';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--border)';
+                dropZone.style.background = 'transparent';
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelect();
+                }
+            });
+
+            function handleFileSelect() {
+                if (fileInput.files.length) {
+                    const names = Array.from(fileInput.files).map(f => f.name).join(', ');
+                    dropZone.innerHTML = `<i data-lucide="check" style="width:24px;height:24px;display:block;margin:0 auto 8px;color:var(--accent)"></i> ${names}`;
+                    lucide.createIcons();
+                }
+            }
+
+            // Convert
+            convertBtn.addEventListener('click', async () => {
+                if (!fileInput.files.length) {
+                    showToast('Selecione uma imagem ou ZIP primeiro', 'info');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+
+                // Settings
+                formData.append('width', document.getElementById('img-width').value);
+                formData.append('height', document.getElementById('img-height').value);
+                formData.append('background', document.getElementById('img-bg').value);
+                formData.append('scale_mode', document.getElementById('img-scale').value);
+                formData.append('dither', document.getElementById('img-dither').value);
+                formData.append('threshold', document.getElementById('img-threshold').value);
+                formData.append('invert', document.getElementById('img-invert').checked);
+                formData.append('rotate', document.getElementById('img-rotate').value);
+
+                setStatus('Processando imagem...');
+
+                try {
+                    const res = await fetch('/api/image2cpp/convert', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!res.ok) throw new Error((await res.json()).error);
+
+                    const data = await res.json();
+
+                    // Show first result in output and preview
+                    if (data.results && data.results.length > 0) {
+                        const first = data.results[0];
+                        // Update Code
+                        let code = `// ${first.name} (${first.width}x${first.height})\n`;
+                        code += `const unsigned char epd_bitmap_${first.name.replace(/\W/g, '_')} [] PROGMEM = {\n`;
+
+                        // Format C-array
+                        const bytes = first.c_array;
+                        for (let i = 0; i < bytes.length; i += 16) {
+                            const chunk = bytes.slice(i, i + 16);
+                            code += '  ' + chunk.map(b => '0x' + b.toString(16).padStart(2, '0').toUpperCase()).join(', ') + ',\n';
+                        }
+                        code += '};\n';
+
+                        if (data.results.length > 1) {
+                            code += `\n// ... e mais ${data.results.length - 1} imagens processadas (ver lógica de batch no image_converter.py)`;
+                        }
+
+                        document.getElementById('img-output-code').value = code;
+
+                        // Update Preview
+                        document.getElementById('preview-img').src = `data:image/png;base64,${first.preview}`;
+                        document.getElementById('preview-img').style.display = 'block';
+                        document.getElementById('preview-empty').style.display = 'none';
+                        showToast('Imagem convertida com sucesso', 'success');
+                    }
+                    setStatus('Pronto');
+
+                } catch (e) {
+                    showToast('Erro: ' + e.message, 'error');
+                    setStatus('Erro');
+                }
+            });
+
+            // Reverse
+            reverseBtn.addEventListener('click', async () => {
+                const hex = document.getElementById('reverse-hex').value;
+                if (!hex.trim()) return;
+
+                setStatus('Decodificando hex...');
+                try {
+                    const res = await fetch('/api/image2cpp/reverse', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            hex,
+                            width: document.getElementById('img-width').value,
+                            height: document.getElementById('img-height').value,
+                            mode: document.getElementById('img-draw-mode').value
+                        })
+                    });
+                    if (!res.ok) throw new Error((await res.json()).error);
+                    const data = await res.json();
+
+                    document.getElementById('preview-img').src = `data:image/png;base64,${data.preview}`;
+                    document.getElementById('preview-img').style.display = 'block';
+                    document.getElementById('preview-empty').style.display = 'none';
+                    setStatus('Pronto');
+
+                } catch (e) {
+                    showToast('Erro: ' + e.message, 'error');
+                }
+            });
+        }
+
+        function copyToClipboard() {
+            const el = document.getElementById('img-output-code');
+            el.select();
+            document.execCommand('copy');
+            showToast('Código copiado!', 'success');
+        }
+
+        function copyCanvasCode() {
+            const el = document.getElementById('cv-code-output');
+            el.select();
+            document.execCommand('copy');
+            showToast('Código copiado!', 'success');
+        }
+
+        // ═══════════════════════════════════════════
+        // CANVAS EDITOR LOGIC
+        // ═══════════════════════════════════════════
+        class CanvasEditor {
+            constructor(width, height) {
+                this.width = width;
+                this.height = height;
+                this.zoom = 8;
+                this.tool = 'pencil';
+                this.isDrawing = false;
+                this.showGrid = true;
+
+                this.canvas = document.getElementById('pixel-canvas');
+                this.ctx = this.canvas.getContext('2d');
+
+                // Offscreen buffer for pixel data (1 = black, 0 = white/transparent)
+                this.pixels = new Uint8Array(width * height);
+
+                this.setupEvents();
+                this.resize(width, height);
+                this.render();
+            }
+
+            resize(w, h) {
+                this.width = w;
+                this.height = h;
+                this.pixels = new Uint8Array(w * h); // Clear on resize
+                this.updateCanvasSize();
+                this.render();
+                this.generateCode();
+            }
+
+            updateCanvasSize() {
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                this.canvas.style.width = `${this.width * this.zoom}px`;
+                this.canvas.style.height = `${this.height * this.zoom}px`;
+            }
+
+            setZoom(z) {
+                this.zoom = parseInt(z);
+                this.updateCanvasSize();
+                this.render(); // Re-render grid if needed (browser handles pixelation)
+            }
+
+            setTool(t) {
+                this.tool = t;
+                document.querySelectorAll('.tool-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.tool === t);
+                });
+            }
+
+            clear() {
+                this.pixels.fill(0);
+                this.render();
+                this.generateCode();
+            }
+
+            invert() {
+                for (let i = 0; i < this.pixels.length; i++) {
+                    this.pixels[i] = this.pixels[i] ? 0 : 1;
+                }
+                this.render();
+                this.generateCode();
+            }
+
+            setPixel(x, y, val) {
+                if (x < 0 || x >= this.width || y < 0 || y >= this.height) return;
+                this.pixels[y * this.width + x] = val;
+            }
+
+            getPixel(x, y) {
+                if (x < 0 || x >= this.width || y < 0 || y >= this.height) return 0;
+                return this.pixels[y * this.width + x];
+            }
+
+            // Bresenham's Line
+            drawLine(x0, y0, x1, y1, val) {
+                let dx = Math.abs(x1 - x0);
+                let dy = Math.abs(y1 - y0);
+                let sx = (x0 < x1) ? 1 : -1;
+                let sy = (y0 < y1) ? 1 : -1;
+                let err = dx - dy;
+
+                while (true) {
+                    this.setPixel(x0, y0, val);
+                    if (x0 === x1 && y0 === y1) break;
+                    let e2 = 2 * err;
+                    if (e2 > -dy) { err -= dy; x0 += sx; }
+                    if (e2 < dx) { err += dx; y0 += sy; }
+                }
+            }
+
+            // Basic shapes
+            drawRect(x0, y0, x1, y1, val) {
+                const x = Math.min(x0, x1), y = Math.min(y0, y1);
+                const w = Math.abs(x1 - x0), h = Math.abs(y1 - y0);
+                // Top/Bottom
+                for (let i = x; i <= x + w; i++) { this.setPixel(i, y, val); this.setPixel(i, y + h, val); }
+                // Left/Right
+                for (let i = y; i <= y + h; i++) { this.setPixel(x, i, val); this.setPixel(x + w, i, val); }
+            }
+
+            drawCircle(xm, ym, r, val) {
+                let x = -r, y = 0, err = 2 - 2 * r;
+                do {
+                    this.setPixel(xm - x, ym + y, val);
+                    this.setPixel(xm - y, ym - x, val);
+                    this.setPixel(xm + x, ym - y, val);
+                    this.setPixel(xm + y, ym + x, val);
+                    r = err;
+                    if (r <= y) err += ++y * 2 + 1;
+                    if (r > x || err > y) err += ++x * 2 + 1;
+                } while (x < 0);
+            }
+
+            setupEvents() {
+                let startX, startY;
+                let tempPixels = null; // Snapshot for shape preview
+
+                const getCoords = (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    return {
+                        x: Math.floor((e.clientX - rect.left) / this.zoom),
+                        y: Math.floor((e.clientY - rect.top) / this.zoom)
+                    };
+                };
+
+                this.canvas.addEventListener('mousedown', (e) => {
+                    this.isDrawing = true;
+                    const { x, y } = getCoords(e);
+                    startX = x; startY = y;
+                    tempPixels = new Uint8Array(this.pixels); // Snapshot
+
+                    if (this.tool === 'pencil') this.setPixel(x, y, 1);
+                    if (this.tool === 'eraser') this.setPixel(x, y, 0);
+
+                    this.render();
+                });
+
+                window.addEventListener('mouseup', () => {
+                    if (this.isDrawing) {
+                        this.isDrawing = false;
+                        this.generateCode(); // Update code on finish
+                    }
+                });
+
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const { x, y } = getCoords(e);
+                    document.getElementById('canvas-coords').textContent = `${x}, ${y}`;
+
+                    if (!this.isDrawing) return;
+
+                    // Restore snapshot for shapes to avoid trails, except pencil/eraser
+                    if (['line', 'rect', 'circle'].includes(this.tool)) {
+                        this.pixels.set(tempPixels);
+                    }
+
+                    if (this.tool === 'pencil') this.setPixel(x, y, 1);
+                    else if (this.tool === 'eraser') this.setPixel(x, y, 0);
+                    else if (this.tool === 'line') this.drawLine(startX, startY, x, y, 1);
+                    else if (this.tool === 'rect') this.drawRect(startX, startY, x, y, 1);
+                    else if (this.tool === 'circle') {
+                        const r = Math.floor(Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2)));
+                        this.drawCircle(startX, startY, r, 1);
+                    }
+
+                    this.render();
+                });
+            }
+
+            render() {
+                const imgData = this.ctx.createImageData(this.width, this.height);
+                const data = imgData.data;
+
+                // Background is white (255), Pixel is black (0) usually for e-ink/print, 
+                // but for OLED: Background Black, Pixel White.
+                // Let's stick to: 1 = Active (Draw Color), 0 = Inactive (Bg Color)
+                // We visualize: 1 = Black, 0 = White (Classic paper look) or keep OLED look?
+                // Dashboard uses OLED look (Black BG). Let's invert for Canvas Editor to look like paper?
+                // Or keep consistency? 
+                // Let's go with: 1 = Black (Draw), 0 = White (Empty) for the Editor (easier to see), 
+                // OR user preference. Let's force: 1=Black pixel on White canvas for now (classic editor).
+
+                for (let i = 0; i < this.pixels.length; i++) {
+                    const val = this.pixels[i] ? 0 : 255; // 1 -> Black, 0 -> White
+                    data[i * 4] = val;
+                    data[i * 4 + 1] = val;
+                    data[i * 4 + 2] = val;
+                    data[i * 4 + 3] = 255; // Alpha
+                }
+
+                this.ctx.putImageData(imgData, 0, 0);
+            }
+
+            generateCode() {
+                const platform = document.getElementById('cv-platform').value;
+                const wrapper = document.getElementById('cv-wrapper').checked;
+                let code = "";
+
+                // Generate XBMP/Bitmap data
+                // Horizontal byte mode usually
+                let bytes = [];
+                for (let y = 0; y < this.height; y++) {
+                    for (let x = 0; x < this.width; x += 8) {
+                        let byte = 0;
+                        for (let b = 0; b < 8; b++) {
+                            if (x + b < this.width && this.pixels[y * this.width + (x + b)]) {
+                                if (platform === 'u8g2') byte |= (1 << b); // LSB first for simple XBM? No, XBM is LSB.
+                                // Actually most libs use MSB for horizontal.
+                                // Let's stick to standard MSB for Adafruit/Generic
+                                else byte |= (0x80 >> b);
+                            }
+                        }
+                        bytes.push('0x' + byte.toString(16).padStart(2, '0').toUpperCase());
+                    }
+                }
+
+                const arrayName = "my_bitmap";
+                const byteStr = bytes.join(', ');
+
+                if (platform === 'adafruit') {
+                    if (wrapper) code += `void draw(int x, int y) {\n  display.drawBitmap(x, y, ${arrayName}, ${this.width}, ${this.height}, WHITE);\n}\n\n`;
+                    code += `const unsigned char ${arrayName}[] PROGMEM = {\n  ${byteStr}\n};`;
+                }
+                else if (platform === 'u8g2') {
+                    // XBM format usually desirable for U8g2 drawXBM
+                    if (wrapper) code += `// u8g2.drawXBM(x, y, ${this.width}, ${this.height}, ${arrayName});\n\n`;
+                    code += `const uint8_t ${arrayName}[] U8X8_PROGMEM = {\n  ${byteStr}\n};`;
+                }
+                else if (platform === 'tft_espi') {
+                    if (wrapper) code += `// sprite.pushImage(x, y, ${this.width}, ${this.height}, ${arrayName});\n\n`;
+                    code += `const uint8_t ${arrayName}[] PROGMEM = {\n  ${byteStr}\n};`;
+                }
+
+                document.getElementById('cv-code-output').value = code;
+            }
+        }
+
+        // Init Canvas Editor
+        let canvasEditor;
+        function initCanvasEditor() {
+            if (canvasEditor) return;
+            canvasEditor = new CanvasEditor(128, 64);
+
+            // Bind UI controls
+            document.getElementById('cv-width').addEventListener('change', (e) => canvasEditor.resize(parseInt(e.target.value), canvasEditor.height));
+            document.getElementById('cv-height').addEventListener('change', (e) => canvasEditor.resize(canvasEditor.width, parseInt(e.target.value)));
+            document.getElementById('canvas-zoom').addEventListener('change', (e) => canvasEditor.setZoom(e.target.value));
+
+            document.querySelectorAll('.tool-btn[data-tool]').forEach(b => {
+                b.addEventListener('click', () => canvasEditor.setTool(b.dataset.tool));
+            });
+
+            document.getElementById('btn-clear-canvas').addEventListener('click', () => canvasEditor.clear());
+            document.getElementById('btn-invert-canvas').addEventListener('click', () => canvasEditor.invert());
+
+            document.getElementById('cv-platform').addEventListener('change', () => canvasEditor.generateCode());
+            document.getElementById('cv-wrapper').addEventListener('change', () => canvasEditor.generateCode());
+
+            // Grid toggle
+            document.getElementById('canvas-grid').addEventListener('change', (e) => {
+                // CSS background grid trick
+                const grid = e.target.checked;
+                canvasEditor.canvas.style.backgroundImage = grid ?
+                    'linear-gradient(#ddd 1px, transparent 1px), linear-gradient(90deg, #ddd 1px, transparent 1px)' : 'none';
+                canvasEditor.canvas.style.backgroundSize = `${canvasEditor.zoom}px ${canvasEditor.zoom}px`;
+            });
+            // Trigger grid set
+            document.getElementById('canvas-grid').dispatchEvent(new Event('change'));
+        }
+
+        // Lazy init when tab is clicked
+        document.querySelector('.tools-tab[data-tab="canvas-editor"]').addEventListener('click', () => {
+            setTimeout(initCanvasEditor, 100);
+        });
+
+        // Init
+        setupImage2CPP();
     </script>
 </body>
 
